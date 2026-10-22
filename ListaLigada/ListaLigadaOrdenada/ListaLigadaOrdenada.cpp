@@ -116,8 +116,8 @@ void inserirElemento()
 {
 	// aloca memoria dinamicamente para o novo elemento
 	NO* novo = (NO*)malloc(sizeof(NO));
-	if (novo == NULL)
-	{
+	if (novo == NULL) {
+		cout << "Erro ao alocar memoria \n";
 		return;
 	}
 
@@ -125,29 +125,99 @@ void inserirElemento()
 	cin >> novo->valor;
 	novo->prox = NULL;
 
-	if (primeiro == NULL)
-	{
+	NO* atual = primeiro;
+	NO* anterior = NULL;
+
+	while (atual != NULL && atual->valor < novo->valor) {
+		anterior = atual;
+		atual = atual->prox;
+	}
+
+	if (atual != NULL && atual->valor == novo->valor) {
+		cout << "Esse elemento ja existe \n";
+		free(novo);
+	}
+
+	if (anterior == NULL) {
 		primeiro = novo;
 	}
-	else
-	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
-		}
-		aux->prox = novo;
+	else {
+		anterior->prox = novo;
 	}
+
+	novo->prox = atual;
+
+	cout << "Elemento inserido \n";
 }
 
 void excluirElemento()
 {
+	if (primeiro == NULL) {
+		cout << "Lista vazia \n";
+		return;
+	}
 
+	int numero;
+	cout << "Digite o elemento a ser excluido: ";
+	cin >> numero;
+
+	NO* atual = primeiro;
+	NO* anterior = NULL;
+
+	while (atual != NULL && atual->valor < numero) {
+		anterior = atual;
+		atual = atual->prox;
+	}
+
+	//se passou do valor, nao existe
+	if (atual == NULL || atual->valor > numero) {
+		cout << "elemento nao encontrado \n";
+		return;
+	}
+
+	// elemento encontrado
+	if (anterior == NULL) {
+		// exclui o primeiro elemento
+		primeiro = atual->prox;
+	}
+	else {
+		// exclui elemento do meio ou fim
+		anterior->prox = atual->prox;
+	}
+
+	free(atual);
+	cout << "Elemento excluido \n";
 }
 
 void buscarElemento()
 {
+	if (primeiro == NULL) {
+		cout << "Lista vazia \n";
+		return;
+	}
 
+	int numero;
+	cout << "Digite o elemento a ser buscado: ";
+	cin >> numero;
+
+	NO* aux = primeiro;
+
+	while (aux != NULL) {
+		if (aux->valor == numero) {
+			cout << "encontrado \n";
+			return;
+		}
+
+		// otimizacao: a lista esta ordenada
+		if (aux->valor > numero) {
+			cout << "elemento nao encontrado \n";
+			return;
+		}
+
+		aux = aux->prox;
+	}
+
+	cout << "elemento nao encontrado \n";
 }
 
 
